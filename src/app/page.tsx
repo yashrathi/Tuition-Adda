@@ -236,7 +236,7 @@ export default async function HomePage() {
               className="mt-7 rounded-full font-bold"
               asChild
             >
-              <Link href="/signup">
+              <Link href="/review">
                 Write a review
                 <span aria-hidden>→</span>
               </Link>
@@ -248,20 +248,8 @@ export default async function HomePage() {
       {/* Latest reviews */}
       {reviews.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 sm:pb-20">
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
+          <div className="mb-8">
             <h2 className="text-3xl sm:text-4xl">Latest reviews</h2>
-            <Link
-              href="/search"
-              className="group inline-flex items-center gap-2 font-bold underline-offset-8 hover:text-primary hover:underline hover:decoration-2"
-            >
-              View all reviews
-              <span
-                aria-hidden
-                className="transition-transform group-hover:translate-x-1"
-              >
-                →
-              </span>
-            </Link>
           </div>
 
           <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
