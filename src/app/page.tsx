@@ -14,7 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TeacherCard } from "@/components/teacher-card";
 import { ReaderIllustration } from "@/components/reader-illustration";
-import { searchTeachers } from "@/lib/queries";
+import { ReviewWall } from "@/components/review-wall";
+import { getRecentReviews, searchTeachers } from "@/lib/queries";
 import { CITY } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
@@ -47,10 +48,14 @@ const SUBJECT_CARDS = [
 
 export default async function HomePage() {
   let featured: Awaited<ReturnType<typeof searchTeachers>> = [];
+  let reviews: Awaited<ReturnType<typeof getRecentReviews>> = [];
   try {
-    featured = (await searchTeachers({ sort: "rating" })).slice(0, 4);
+    [featured, reviews] = await Promise.all([
+      searchTeachers({ sort: "rating" }).then((r) => r.slice(0, 4)),
+      getRecentReviews(12),
+    ]);
   } catch {
-    // DB not configured yet — render the landing page without featured teachers.
+    // DB not configured yet — render the landing page without dynamic sections.
   }
 
   return (
@@ -186,6 +191,9 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {/* Everyone's talking about — reviews wall */}
+      {reviews.length > 0 && <ReviewWall reviews={reviews} />}
 
       {/* Teacher CTA */}
       <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 sm:pb-20">

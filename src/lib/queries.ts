@@ -66,6 +66,29 @@ export async function getStudentRatings(studentId: string) {
   });
 }
 
+export async function getRecentReviews(limit = 12) {
+  return db.query.ratings.findMany({
+    where: (r, { ne }) => ne(r.review, ""),
+    orderBy: desc(ratings.createdAt),
+    limit,
+    with: {
+      teacher: {
+        columns: {
+          id: true,
+          displayName: true,
+          photoUrl: true,
+          subjects: true,
+          modes: true,
+          locality: true,
+        },
+      },
+      student: { columns: { studentName: true, grade: true } },
+    },
+  });
+}
+
+export type RecentReview = Awaited<ReturnType<typeof getRecentReviews>>[number];
+
 export async function getTeacherWithRatings(id: string) {
   const teacher = await db.query.teacherProfiles.findFirst({
     where: eq(teacherProfiles.id, id),
