@@ -1,33 +1,42 @@
 import Link from "next/link";
-import { GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
 import { signOut } from "@/lib/actions/user";
-import { CITY } from "@/lib/constants";
+
+const NAV_LINKS = [
+  { href: "/search", label: "Find Teachers" },
+  { href: "/signup", label: "Write a Review" },
+  { href: "/search?sort=rating", label: "Rankings" },
+];
 
 export async function Navbar() {
   const user = await getCurrentUser();
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 font-semibold">
-          <GraduationCap className="size-6 text-primary" />
-          <span>
+    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+        <Link href="/" className="group">
+          <span className="inline-flex items-center rounded-lg bg-primary px-3 py-1.5 font-display text-lg leading-none text-primary-foreground transition-transform group-hover:-translate-y-0.5">
             Tuition Adda
-            <span className="ml-1.5 text-xs font-normal text-muted-foreground">
-              {CITY}
-            </span>
           </span>
         </Link>
 
-        <nav className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/search">Find teachers</Link>
-          </Button>
+        <nav className="hidden items-center gap-7 md:flex">
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="text-[15px] font-bold text-foreground/90 underline-offset-8 transition-colors hover:text-primary hover:underline hover:decoration-2"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-2">
           {user ? (
             <>
-              <Button variant="ghost" size="sm" asChild>
+              <Button variant="ghost" size="sm" className="font-bold" asChild>
                 <Link href="/dashboard">Dashboard</Link>
               </Button>
               <form
@@ -43,15 +52,20 @@ export async function Navbar() {
             </>
           ) : (
             <>
-              <Button variant="ghost" size="sm" asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="hidden font-bold sm:inline-flex"
+                asChild
+              >
                 <Link href="/login">Log in</Link>
               </Button>
-              <Button size="sm" asChild>
+              <Button size="sm" className="rounded-full font-bold" asChild>
                 <Link href="/signup">Sign up</Link>
               </Button>
             </>
           )}
-        </nav>
+        </div>
       </div>
     </header>
   );

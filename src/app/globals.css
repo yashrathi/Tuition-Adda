@@ -4,25 +4,26 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.55 0.2 262);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.95 0.03 262);
-  --accent-foreground: oklch(0.205 0 0);
+  --radius: 0.9rem;
+  /* Warm cream canvas + punchy green — "Tuition Adda" brand vibe */
+  --background: oklch(0.976 0.014 96);
+  --foreground: oklch(0.2 0.008 96);
+  --card: oklch(0.995 0.006 95);
+  --card-foreground: oklch(0.2 0.008 96);
+  --popover: oklch(0.995 0.006 95);
+  --popover-foreground: oklch(0.2 0.008 96);
+  --primary: oklch(0.635 0.165 149);
+  --primary-foreground: oklch(0.99 0.008 120);
+  --secondary: oklch(0.935 0.014 96);
+  --secondary-foreground: oklch(0.28 0.01 96);
+  --muted: oklch(0.945 0.013 95);
+  --muted-foreground: oklch(0.52 0.012 96);
+  --accent: oklch(0.94 0.045 150);
+  --accent-foreground: oklch(0.3 0.08 150);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.55 0.2 262);
+  --border: oklch(0.9 0.015 96);
+  --input: oklch(0.9 0.015 96);
+  --ring: oklch(0.635 0.165 149);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -39,24 +40,24 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.7 0.15 262);
-  --primary-foreground: oklch(0.145 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: oklch(0.19 0.008 110);
+  --foreground: oklch(0.96 0.01 100);
+  --card: oklch(0.23 0.008 110);
+  --card-foreground: oklch(0.96 0.01 100);
+  --popover: oklch(0.23 0.008 110);
+  --popover-foreground: oklch(0.96 0.01 100);
+  --primary: oklch(0.72 0.17 149);
+  --primary-foreground: oklch(0.18 0.02 149);
+  --secondary: oklch(0.28 0.008 110);
+  --secondary-foreground: oklch(0.96 0.01 100);
+  --muted: oklch(0.28 0.008 110);
+  --muted-foreground: oklch(0.72 0.01 100);
+  --accent: oklch(0.32 0.04 150);
+  --accent-foreground: oklch(0.92 0.05 150);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
+  --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.7 0.15 262);
+  --ring: oklch(0.72 0.17 149);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -108,8 +109,9 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-manrope);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-bricolage);
 }
 
 @layer base {
@@ -118,5 +120,29 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "cv01";
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display tracking-tight;
+  }
+}
+
+@layer components {
+  /* Heavy condensed display headline — the hero look */
+  .font-display {
+    font-family: var(--font-display), var(--font-sans), sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+  }
+  /* Warm greige panel behind the hero, slightly deeper than the page */
+  .brand-panel {
+    background: oklch(0.935 0.011 95);
+  }
+  .dark .brand-panel {
+    background: oklch(0.24 0.008 110);
   }
 }

@@ -1,5 +1,6 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { users } from "@/db/schema";
@@ -41,4 +42,5 @@ export async function ensureAppUser() {
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
+  redirect("/");
 }
