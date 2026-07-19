@@ -29,7 +29,19 @@ function parseFilters(sp: SearchParams): Filters {
 
 async function Results({ searchParams }: { searchParams: SearchParams }) {
   const filters = parseFilters(searchParams);
-  const results = await searchTeachers(filters);
+  let results: Awaited<ReturnType<typeof searchTeachers>>;
+  try {
+    results = await searchTeachers(filters);
+  } catch {
+    return (
+      <div className="rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground">
+        Database isn&apos;t configured yet. Add your Supabase credentials to{" "}
+        <code className="rounded bg-muted px-1">.env.local</code>, then run{" "}
+        <code className="rounded bg-muted px-1">npm run db:push</code> and{" "}
+        <code className="rounded bg-muted px-1">npm run db:seed</code>.
+      </div>
+    );
+  }
 
   if (results.length === 0) {
     return (

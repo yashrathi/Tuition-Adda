@@ -7,6 +7,12 @@ import { createClient } from "@/lib/supabase/server";
 // The app-level user (role + profiles) for the signed-in Supabase user,
 // or null when logged out. Cached per-request.
 export const getCurrentUser = cache(async () => {
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    return null;
+  }
   const supabase = await createClient();
   const {
     data: { user: authUser },
