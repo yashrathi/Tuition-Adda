@@ -1,65 +1,133 @@
-import Image from "next/image";
+import Link from "next/link";
+import { GraduationCap, Search, Star, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { TeacherCard } from "@/components/teacher-card";
+import { searchTeachers } from "@/lib/queries";
+import { CITY, SUBJECTS } from "@/lib/constants";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+const STEPS = [
+  {
+    icon: Search,
+    title: "Search",
+    blurb: `Filter teachers in ${CITY} by pincode, subject, grade, and board.`,
+  },
+  {
+    icon: Users,
+    title: "Connect",
+    blurb: "Call or WhatsApp the teacher directly. No middlemen, no fees.",
+  },
+  {
+    icon: Star,
+    title: "Rate",
+    blurb: "Share your experience so other parents can choose with confidence.",
+  },
+];
+
+export default async function HomePage() {
+  let featured: Awaited<ReturnType<typeof searchTeachers>> = [];
+  try {
+    featured = (await searchTeachers({ sort: "rating" })).slice(0, 4);
+  } catch {
+    // DB not configured yet — render the landing page without featured teachers.
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div>
+      {/* Hero */}
+      <section className="border-b bg-accent/40">
+        <div className="mx-auto max-w-6xl px-4 py-16 text-center sm:py-24">
+          <Badge variant="secondary" className="mb-4">
+            Now live in {CITY}
+          </Badge>
+          <h1 className="mx-auto max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">
+            Find the right tuition teacher near you
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mx-auto mt-4 max-w-xl text-lg text-muted-foreground">
+            Search by pincode, subject, grade, and board. Read honest ratings
+            from students and parents in {CITY}.
           </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Button size="lg" asChild>
+              <Link href="/search">
+                <Search className="size-4" /> Find teachers
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <Link href="/signup">
+                <GraduationCap className="size-4" /> I&apos;m a teacher
+              </Link>
+            </Button>
+          </div>
+
+          <div className="mx-auto mt-10 flex max-w-xl flex-wrap justify-center gap-2">
+            {SUBJECTS.slice(0, 8).map((s) => (
+              <Link key={s} href={`/search?subject=${encodeURIComponent(s)}`}>
+                <Badge
+                  variant="outline"
+                  className="cursor-pointer bg-background px-3 py-1 hover:bg-muted"
+                >
+                  {s}
+                </Badge>
+              </Link>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* How it works */}
+      <section className="mx-auto max-w-6xl px-4 py-16">
+        <h2 className="text-center text-2xl font-semibold">How it works</h2>
+        <div className="mt-8 grid gap-6 sm:grid-cols-3">
+          {STEPS.map((step) => (
+            <div key={step.title} className="rounded-xl border p-6 text-center">
+              <step.icon className="mx-auto size-8 text-primary" />
+              <h3 className="mt-3 font-semibold">{step.title}</h3>
+              <p className="mt-1.5 text-sm text-muted-foreground">{step.blurb}</p>
+            </div>
+          ))}
         </div>
-      </main>
+      </section>
+
+      {/* Featured teachers */}
+      {featured.length > 0 && (
+        <section className="border-t bg-muted/30">
+          <div className="mx-auto max-w-6xl px-4 py-16">
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="text-2xl font-semibold">Top-rated teachers</h2>
+              <Button variant="ghost" asChild>
+                <Link href="/search">See all →</Link>
+              </Button>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {featured.map((r) => (
+                <TeacherCard
+                  key={r.profile.id}
+                  profile={r.profile}
+                  avgStars={r.avgStars}
+                  ratingCount={r.ratingCount}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Teacher CTA */}
+      <section className="border-t">
+        <div className="mx-auto max-w-6xl px-4 py-16 text-center">
+          <h2 className="text-2xl font-semibold">Are you a tuition teacher?</h2>
+          <p className="mx-auto mt-2 max-w-md text-muted-foreground">
+            Create a free profile and let students and parents in {CITY} find
+            you — takes two minutes.
+          </p>
+          <Button size="lg" className="mt-6" asChild>
+            <Link href="/signup">Create your profile</Link>
+          </Button>
+        </div>
+      </section>
     </div>
   );
 }
