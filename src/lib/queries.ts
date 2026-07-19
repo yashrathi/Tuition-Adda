@@ -82,7 +82,7 @@ export async function getRecentReviews(limit = 12) {
           locality: true,
         },
       },
-      student: { columns: { studentName: true, grade: true } },
+      student: { columns: { studentName: true, grade: true, board: true } },
     },
   });
 }

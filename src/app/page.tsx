@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TeacherCard } from "@/components/teacher-card";
 import { ReaderIllustration } from "@/components/reader-illustration";
+import { WalkingBook } from "@/components/walking-book";
 import { ReviewWall } from "@/components/review-wall";
 import { getRecentReviews, searchTeachers } from "@/lib/queries";
 import { CITY } from "@/lib/constants";
@@ -159,7 +160,7 @@ export default async function HomePage() {
             <Link
               key={s.label}
               href={`/search?subject=${encodeURIComponent(s.subject)}`}
-              className="flex flex-col items-center justify-center gap-4 rounded-2xl bg-violet-100 py-9 text-foreground transition-all hover:-translate-y-1 hover:bg-violet-200 hover:shadow-md dark:bg-violet-500/15 dark:hover:bg-violet-500/25"
+              className="flex flex-col items-center justify-center gap-4 rounded-2xl bg-accent py-9 text-foreground transition-all hover:-translate-y-1 hover:bg-primary/20 hover:shadow-md"
             >
               <s.icon className="size-11" strokeWidth={1.5} />
               <span className="text-lg font-bold">{s.label}</span>
@@ -217,6 +218,82 @@ export default async function HomePage() {
           </Button>
         </div>
       </section>
+
+      {/* Write-a-review banner */}
+      <section className="mx-auto max-w-6xl px-4 pb-4 sm:px-6 sm:pb-8">
+        <div className="relative overflow-hidden rounded-[2rem] bg-primary px-6 py-14 text-center text-primary-foreground sm:px-12 sm:py-16">
+          <WalkingBook className="pointer-events-none absolute bottom-2 left-4 hidden w-36 text-primary-foreground lg:block xl:left-10 xl:w-44" />
+          <div className="lg:pl-40">
+            <h2 className="font-display text-3xl text-primary-foreground sm:text-4xl md:text-5xl">
+              Your review might help the next student
+            </h2>
+            <p className="mx-auto mt-3 max-w-md font-semibold text-primary-foreground/90">
+              Share your experience. Make a difference.
+            </p>
+            <Button
+              size="lg"
+              variant="secondary"
+              className="mt-7 rounded-full font-bold"
+              asChild
+            >
+              <Link href="/signup">
+                Write a review
+                <span aria-hidden>→</span>
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Latest reviews */}
+      {reviews.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 sm:pb-20">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
+            <h2 className="text-3xl sm:text-4xl">Latest reviews</h2>
+            <Link
+              href="/search"
+              className="group inline-flex items-center gap-2 font-bold underline-offset-8 hover:text-primary hover:underline hover:decoration-2"
+            >
+              View all reviews
+              <span
+                aria-hidden
+                className="transition-transform group-hover:translate-x-1"
+              >
+                →
+              </span>
+            </Link>
+          </div>
+
+          <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {reviews.map((r) => (
+              <Link
+                key={r.id}
+                href={`/teacher/${r.teacher.id}`}
+                className="flex w-72 shrink-0 snap-start flex-col gap-4 rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:shadow-md"
+              >
+                <p className="line-clamp-3 text-lg font-bold leading-snug">
+                  &ldquo;{r.review}&rdquo;
+                </p>
+                <div className="flex items-center gap-0.5">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Star
+                      key={i}
+                      className={
+                        i <= r.stars
+                          ? "size-4 fill-primary text-primary"
+                          : "size-4 text-muted-foreground/30"
+                      }
+                    />
+                  ))}
+                </div>
+                <p className="mt-auto text-sm text-muted-foreground">
+                  Class {r.student.grade}, {r.student.board}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
