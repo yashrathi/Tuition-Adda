@@ -15,6 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import { ContactReveal } from "@/components/contact-reveal";
 import { RatingForm } from "@/components/rating-form";
 import { StarRating } from "@/components/star-rating";
+import { TeacherScores } from "@/components/teacher-scores";
 import { getCurrentUser } from "@/lib/auth";
 import { getTeacherWithRatings } from "@/lib/queries";
 import { formatGrade } from "@/lib/constants";
@@ -168,6 +169,8 @@ export default async function TeacherPage({
               Reviews ({reviews.length})
             </h2>
 
+            <TeacherScores reviews={reviews} />
+
             {isStudent && (
               <Card>
                 <CardHeader>
@@ -180,7 +183,14 @@ export default async function TeacherPage({
                     teacherId={teacher.id}
                     existing={
                       myRating
-                        ? { stars: myRating.stars, review: myRating.review }
+                        ? {
+                            stars: myRating.stars,
+                            review: myRating.review,
+                            discipline: myRating.discipline ?? 0,
+                            patience: myRating.patience ?? 0,
+                            personalAttention: myRating.personalAttention ?? 0,
+                            homework: myRating.homework ?? 0,
+                          }
                         : null
                     }
                   />
@@ -188,15 +198,31 @@ export default async function TeacherPage({
               </Card>
             )}
             {!user && (
-              <p className="text-sm text-muted-foreground">
-                <Link
-                  href="/signup"
-                  className="text-primary underline-offset-4 hover:underline"
-                >
-                  Sign up as a student
-                </Link>{" "}
-                to rate this teacher.
-              </p>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Rate this teacher</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    Log in to share your experience and help other students.
+                  </p>
+                  <Button asChild>
+                    <Link href={`/login?next=/teacher/${teacher.id}`}>
+                      Log in to review
+                    </Link>
+                  </Button>
+                  <p className="text-sm text-muted-foreground">
+                    New here?{" "}
+                    <Link
+                      href="/signup"
+                      className="text-primary underline-offset-4 hover:underline"
+                    >
+                      Create an account
+                    </Link>
+                    .
+                  </p>
+                </CardContent>
+              </Card>
             )}
 
             {reviews.length === 0 && (

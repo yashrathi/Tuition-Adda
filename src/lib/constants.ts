@@ -33,6 +33,17 @@ export const TUITION_TYPES = ["Solo", "Group"] as const;
 
 export const MODES = ["Student's home", "Teacher's place", "Online"] as const;
 
+// Per-category scores students vote on when reviewing a teacher.
+// `key` matches the column name on the ratings table.
+export const RATING_CATEGORIES = [
+  { key: "discipline", label: "Discipline" },
+  { key: "patience", label: "Patience" },
+  { key: "personalAttention", label: "Personal Attention" },
+  { key: "homework", label: "Homework" },
+] as const;
+
+export type RatingCategoryKey = (typeof RATING_CATEGORIES)[number]["key"];
+
 export type Subject = (typeof SUBJECTS)[number];
 export type Grade = (typeof GRADES)[number];
 export type Board = (typeof BOARDS)[number];

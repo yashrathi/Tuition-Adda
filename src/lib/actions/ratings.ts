@@ -10,6 +10,10 @@ export async function submitRating(input: {
   teacherId: string;
   stars: number;
   review: string;
+  discipline?: number;
+  patience?: number;
+  personalAttention?: number;
+  homework?: number;
 }) {
   const user = await getCurrentUser();
   if (!user) return { error: "Sign in to rate a teacher." };
@@ -21,6 +25,18 @@ export async function submitRating(input: {
   if (stars < 1 || stars > 5) return { error: "Pick 1 to 5 stars." };
   const review = input.review.trim().slice(0, 2000);
 
+  // Each category is optional; a 0/missing value stores as null (not voted).
+  const score = (v: number | undefined) => {
+    const n = Math.round(v ?? 0);
+    return n >= 1 && n <= 5 ? n : null;
+  };
+  const categories = {
+    discipline: score(input.discipline),
+    patience: score(input.patience),
+    personalAttention: score(input.personalAttention),
+    homework: score(input.homework),
+  };
+
   await db
     .insert(ratings)
     .values({
@@ -28,10 +44,11 @@ export async function submitRating(input: {
       studentId: user.studentProfile.id,
       stars,
       review,
+      ...categories,
     })
     .onConflictDoUpdate({
       target: [ratings.teacherId, ratings.studentId],
-      set: { stars, review, updatedAt: new Date() },
+      set: { stars, review, ...categories, updatedAt: new Date() },
     });
 
   revalidatePath(`/teacher/${input.teacherId}`);

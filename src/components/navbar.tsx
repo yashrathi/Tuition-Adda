@@ -5,8 +5,7 @@ import { signOut } from "@/lib/actions/user";
 
 const NAV_LINKS = [
   { href: "/search", label: "Find Teachers" },
-  { href: "/signup", label: "Write a Review" },
-  { href: "/search?sort=rating", label: "Rankings" },
+  { href: "/review", label: "Write a Review" },
 ];
 
 export async function Navbar() {

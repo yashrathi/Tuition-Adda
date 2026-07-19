@@ -1,8 +1,9 @@
-import { and, arrayContains, avg, count, desc, eq, sql } from "drizzle-orm";
+import { and, arrayContains, avg, count, desc, eq, ilike, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { ratings, teacherProfiles } from "@/db/schema";
 
 export type SearchFilters = {
+  name?: string;
   pincode?: string;
   subject?: string;
   grade?: number;
@@ -15,6 +16,8 @@ export type SearchFilters = {
 export async function searchTeachers(filters: SearchFilters) {
   const conditions = [eq(teacherProfiles.isActive, true)];
 
+  if (filters.name)
+    conditions.push(ilike(teacherProfiles.displayName, `%${filters.name}%`));
   if (filters.pincode)
     conditions.push(arrayContains(teacherProfiles.pincodes, [filters.pincode]));
   if (filters.subject)

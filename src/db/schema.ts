@@ -95,6 +95,11 @@ export const ratings = pgTable(
       .notNull()
       .references(() => studentProfiles.id, { onDelete: "cascade" }),
     stars: integer("stars").notNull(),
+    // Optional per-category scores (1-5), voted on alongside the review.
+    discipline: integer("discipline"),
+    patience: integer("patience"),
+    personalAttention: integer("personal_attention"),
+    homework: integer("homework"),
     review: text("review").notNull().default(""),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
